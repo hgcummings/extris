@@ -3,13 +3,13 @@ import create from "@most/create";
 
 import Engine from "./engine";
 
-export default R.curry(({ config, input }, ticker) =>
+export default R.curry(({ config, input, external }, ticker) =>
   create((next, complete, error) => {
     const engine = new Engine();
     const subscription = ticker
-      .sample((frame, config, input) =>
-        ({ frame, config, input }),
-        ticker, config, input)
+      .sample((frame, config, input, external) =>
+        ({ frame, config, input, external }),
+        ticker, config, input, external)
       .map(::engine.next)
       .subscribe({
         next: (data) =>

@@ -14,6 +14,7 @@ const P_WIDTH = P_LEFT + WIDTH + P_RIGHT;
 const P_HEIGHT = P_TOP + HEIGHT + P_BOTTOM;
 
 export const EMPTY = -1;
+export const GARBAGE = -2;
 export const WALL = 0xFF;
 
 export default () => ({
@@ -87,6 +88,23 @@ export const clearLines = ground => {
   for (let y = -P_TOP; y < HEIGHT + P_BOTTOM; y++) {
     if (isFull(ground, y)) {
       clearLine(ground, y);
+    }
+  }
+};
+
+export const addGarbage = (ground, lines) => {
+  for (let line = 0; line < lines; ++line) {
+    for (let y = -P_TOP; y < HEIGHT; y++) {
+      for (let x = -P_LEFT; x < WIDTH + P_RIGHT; x++) {
+        set(ground, x, y, get(ground, x, y + 1));
+      }
+    }
+
+    const hole = Math.floor(Math.random() * WIDTH);
+    for (let x = -P_LEFT; x < WIDTH + P_RIGHT; x++) {
+      if (x !== hole) {
+        set(ground, x, HEIGHT - 1, GARBAGE);
+      }
     }
   }
 };

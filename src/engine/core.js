@@ -7,7 +7,7 @@ import Block, {
   moveTo, moveBy,
   rotate, ROTATE_LEFT, ROTATE_RIGHT,
 } from "../structs/block";
-import Ground, { checkAvailable, place, clearLines } from "../structs/ground";
+import Ground, { checkAvailable, place, clearLines, addGarbage } from "../structs/ground";
 
 import EngineRandom from "./random";
 
@@ -58,6 +58,10 @@ export default class EngineCore {
 
   clearLines() {
     clearLines(this.ground);
+  }
+
+  addGarbage(lines) {
+    addGarbage(this.ground, lines);
   }
 
   hold() {

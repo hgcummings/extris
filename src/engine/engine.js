@@ -58,6 +58,7 @@ export default class Engine {
       drop: 0,
       lock: 0,
     };
+    this.garbage = 0;
   }
   trace(...args) {
     log.trace("%o [%s]", this.frame, String(this.state).toUpperCase(), ...args);
@@ -66,14 +67,14 @@ export default class Engine {
     // TODO
     this.delays.lock = 0;
   }
-  next({ frame, config, input }) {
+  next({ frame, config, input, external }) {
     if (this.state === State.End) {
       return {
         action: "complete",
       };
     }
     for (let __ = 0; __ < frame; __++) {
-      this.processFrame({ config, input });
+      this.processFrame({ config, input, external });
       this.frame++;
     }
     return {
@@ -83,12 +84,12 @@ export default class Engine {
       delays: this.delays,
     };
   }
-  processFrame({ config, input }) {
+  processFrame({ config, input, external }) {
     this.updateInput(input);
     let previousState = null;
     while (previousState !== this.state) {
       previousState = this.state;
-      this.processState(config);
+      this.processState(config, external);
     }
   }
   updateInput(input) {
@@ -124,7 +125,7 @@ export default class Engine {
       state.previous = -1;
     }
   }
-  processState(config) {
+  processState(config, external) {
     const core = this.core;
     switch (this.state) {
       case State.Begin: {
@@ -134,6 +135,10 @@ export default class Engine {
       }
 
       case State.Create: {
+        if (external.garbage > this.garbage) {
+          core.addGarbage(external.garbage - this.garbage);
+          this.garbage = external.garbage;
+        }
         core.next();
         core.showBlock = false;
         this.trace(core.block);

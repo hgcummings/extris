@@ -1,4 +1,5 @@
 import R from "ramda";
+import most from "most";
 
 import EngineData from "./data/engine.json";
 import InputData from "./data/input.json";
@@ -23,9 +24,10 @@ export default class Game {
     const config =
       storage.listen("engine.config")
         .map(R.merge(EngineData.config));
+    const external = most.of({ garbage: 0 });
     this.stream =
       ticker
-        .thru(Engine({ config, input }));
+        .thru(Engine({ config, input, external }));
   }
   run(handler) {
     return new Promise((resolve, reject) => {
