@@ -12,4 +12,4 @@ import Renderer from "./src/renderer";
 const game = new Game();
 const renderer = new Renderer();
 
-game.run(::renderer.render);
+game.run(::renderer.render).catch(e => console.error(e));
