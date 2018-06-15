@@ -85,14 +85,17 @@ export const clearLine = (ground, lineY) => {
 };
 
 export const clearLines = ground => {
+  let clearedLines = 0;
   for (let y = -P_TOP; y < HEIGHT + P_BOTTOM; y++) {
     if (isFull(ground, y)) {
       clearLine(ground, y);
+      ++clearedLines;
     }
   }
+  return clearedLines;
 };
 
-export const addGarbage = (ground, lines) => {
+export const addGarbage = (ground, lines, randomSource) => {
   for (let line = 0; line < lines; ++line) {
     for (let y = -P_TOP; y < HEIGHT; y++) {
       for (let x = -P_LEFT; x < WIDTH + P_RIGHT; x++) {
@@ -100,7 +103,7 @@ export const addGarbage = (ground, lines) => {
       }
     }
 
-    const hole = Math.floor(Math.random() * WIDTH);
+    const hole = randomSource.next(WIDTH);
     for (let x = -P_LEFT; x < WIDTH + P_RIGHT; x++) {
       if (x !== hole) {
         set(ground, x, HEIGHT - 1, GARBAGE);

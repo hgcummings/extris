@@ -39,9 +39,9 @@ const Keys = [
 ];
 
 export default class Engine {
-  constructor() {
+  constructor(randomSeed) {
     this.frame = 0;
-    this.core = new EngineCore();
+    this.core = new EngineCore(randomSeed);
     this.state = State.Begin;
     this.keyState = {};
     for (const key of Keys) {
@@ -58,7 +58,6 @@ export default class Engine {
       drop: 0,
       lock: 0,
     };
-    this.garbage = 0;
   }
   trace(...args) {
     log.trace("%o [%s]", this.frame, String(this.state).toUpperCase(), ...args);
@@ -135,10 +134,7 @@ export default class Engine {
       }
 
       case State.Create: {
-        if (external.garbage > this.garbage) {
-          core.addGarbage(external.garbage - this.garbage);
-          this.garbage = external.garbage;
-        }
+        core.consumeGarbage(external.garbage);
         core.next();
         core.showBlock = false;
         this.trace(core.block);
@@ -248,7 +244,7 @@ export default class Engine {
       }
 
       case State.ClearLine: {
-        core.clearLines();
+        const clearedLines = core.clearLines();
         this.state = State.Create;
         break;
       }

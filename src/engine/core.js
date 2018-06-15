@@ -9,11 +9,14 @@ import Block, {
 } from "../structs/block";
 import Ground, { checkAvailable, place, clearLines, addGarbage } from "../structs/ground";
 
+import Random from "../utils/random";
 import EngineRandom from "./random";
 
 export default class EngineCore {
-  constructor() {
-    this.random = new EngineRandom();
+  constructor(randomSeed) {
+    const randomSource = new Random(randomSeed);
+    this.engineRandom = new EngineRandom(randomSource.next());
+    this.garbageRandom = new Random(randomSource.next());
 
     this.ground = Ground();
     this.block = null;
@@ -26,11 +29,13 @@ export default class EngineCore {
     for (let i = 0; i < EngineData.next; i++) {
       this.nextBlocks.push(this.randomBlock());
     }
+    this.garbageConsumed = 0;
+    this.garbageProduced = 0;
   }
 
   randomBlock() {
     return Block({
-      type: this.random.next(),
+      type: this.engineRandom.next(),
     });
   }
   initializePosition() {
@@ -57,11 +62,16 @@ export default class EngineCore {
   }
 
   clearLines() {
-    clearLines(this.ground);
+    const clearedLines = clearLines(this.ground);
+    this.garbageProduced += EngineData.config.garbage[clearedLines];
   }
 
-  addGarbage(lines) {
-    addGarbage(this.ground, lines);
+  consumeGarbage(externalGarbage) {
+    const unconsumedGarbage = externalGarbage - this.garbageConsumed;
+    if (unconsumedGarbage > 0) {
+      addGarbage(this.ground, unconsumedGarbage, this.garbageRandom);
+      this.garbageConsumed += unconsumedGarbage;
+    }
   }
 
   hold() {

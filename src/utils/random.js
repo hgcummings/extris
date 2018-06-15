@@ -6,6 +6,6 @@ export default class Random {
     this.internal = new MersenneTwister(seed);
   }
   next(max) {
-    return this.internal.int() % max;
+    return max ? this.internal.int() % max : this.internal.int();
   }
 }

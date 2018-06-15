@@ -3,9 +3,9 @@ import create from "@most/create";
 
 import Engine from "./engine";
 
-export default R.curry(({ config, input, external }, ticker) =>
+export default R.curry(({ config, input, external, randomSeed }, ticker) =>
   create((next, complete, error) => {
-    const engine = new Engine();
+    const engine = new Engine(randomSeed);
     const subscription = ticker
       .sample((frame, config, input, external) =>
         ({ frame, config, input, external }),
