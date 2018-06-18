@@ -31,6 +31,7 @@ export default class EngineCore {
     }
     this.garbageConsumed = 0;
     this.garbageProduced = 0;
+    this.score = 0;
   }
 
   randomBlock() {
@@ -63,6 +64,7 @@ export default class EngineCore {
 
   clearLines() {
     const clearedLines = clearLines(this.ground);
+    this.score += EngineData.score.lines[clearedLines];
     this.garbageProduced += EngineData.config.garbage[clearedLines];
   }
 
