@@ -1,5 +1,4 @@
 import EngineData from "../data/engine.json";
-import GroundData from "../data/ground.json";
 import BlockData from "../data/block.json";
 
 import Block, {
@@ -7,18 +6,18 @@ import Block, {
   moveTo, moveBy,
   rotate, ROTATE_LEFT, ROTATE_RIGHT,
 } from "../structs/block";
-import Ground, { checkAvailable, place, clearLines, addGarbage } from "../structs/ground";
+import Ground from "../structs/ground";
 
 import Random from "../utils/random";
 import EngineRandom from "./random";
 
 export default class EngineCore {
-  constructor(randomSeed) {
+  constructor(playfield, randomSeed) {
     const randomSource = new Random(randomSeed);
     this.engineRandom = new EngineRandom(randomSource.next());
     this.garbageRandom = new Random(randomSource.next());
 
-    this.ground = Ground();
+    this.ground = new Ground(playfield);
     this.block = null;
     this.maskBlock = null;
     this.holdBlock = null;
@@ -42,7 +41,7 @@ export default class EngineCore {
   initializePosition() {
     const data = getData(this.block);
     this.block = moveTo(this.block,
-      Math.floor((GroundData.size.width - data.size.width) / 2 + BlockData.offset.x),
+      Math.floor((this.ground.width - data.size.width) / 2 + BlockData.offset.x),
       Math.floor(-data.size.height / 2 + BlockData.offset.y));
   }
   next() {
@@ -63,7 +62,7 @@ export default class EngineCore {
   }
 
   clearLines() {
-    const clearedLines = clearLines(this.ground);
+    const clearedLines = this.ground.clearLines();
     this.score += EngineData.score.lines[clearedLines];
     this.garbageProduced += EngineData.config.garbage[clearedLines];
   }
@@ -71,7 +70,7 @@ export default class EngineCore {
   consumeGarbage(externalGarbage) {
     const unconsumedGarbage = externalGarbage - this.garbageConsumed;
     if (unconsumedGarbage > 0) {
-      addGarbage(this.ground, unconsumedGarbage, this.garbageRandom);
+      this.ground.addGarbage(unconsumedGarbage, this.garbageRandom);
       this.garbageConsumed += unconsumedGarbage;
     }
   }
@@ -102,14 +101,14 @@ export default class EngineCore {
   }
 
   checkAvailable(block = this.block) {
-    return checkAvailable(this.ground, block);
+    return this.ground.checkAvailable(block);
   }
   isDead() {
     return !this.checkAvailable();
   }
 
   place(block = this.block) {
-    return place(this.ground, block);
+    return this.ground.place(block);
   }
   lock() {
     this.isLocked = true;

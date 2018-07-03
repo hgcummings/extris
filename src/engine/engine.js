@@ -39,9 +39,9 @@ const Keys = [
 ];
 
 export default class Engine {
-  constructor(randomSeed) {
+  constructor(playfield, randomSeed) {
     this.frame = 0;
-    this.core = new EngineCore(randomSeed);
+    this.core = new EngineCore(playfield, randomSeed);
     this.state = State.Begin;
     this.keyState = {};
     for (const key of Keys) {

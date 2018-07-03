@@ -1,16 +1,10 @@
-import GroundData from "./data/ground.json";
-
 import { getData } from "./structs/block";
 import { EMPTY, get } from "./structs/ground";
 
-const WIDTH = GroundData.size.width;
-const HEIGHT = GroundData.size.height;
-
 export default class Renderer {
-  constructor() {
-    // TODO
-    this.width = WIDTH * 20;
-    this.height = HEIGHT * 20;
+  constructor(playfield) {
+    this.width = playfield.size.width * 20;
+    this.height = playfield.size.height * 20;
     this.canvas = document.createElement("canvas");
     this.canvas.width = this.width * window.devicePixelRatio;
     this.canvas.height = this.height * window.devicePixelRatio;
@@ -39,8 +33,8 @@ export default class Renderer {
     }
   }
   drawGround(ground) {
-    for (let x = 0; x < WIDTH; x++) {
-      for (let y = 0; y < HEIGHT; y++) {
+    for (let x = 0; x < ground.width; x++) {
+      for (let y = 0; y < ground.height; y++) {
         this.drawUnit(x, y, get(ground, x, y));
       }
     }

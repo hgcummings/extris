@@ -14,7 +14,7 @@ import KeyStore from "./input/utils/key-store";
 import Engine from "./engine";
 
 export default class Game {
-  constructor() {
+  constructor(playfield) {
     const ticker = Ticker();
     const input =
       Keyboard(document)
@@ -27,7 +27,7 @@ export default class Game {
     const external = most.of({ garbage: 0 });
     this.stream =
       ticker
-        .thru(Engine({ config, input, external }));
+        .thru(Engine({ config, playfield, input, external }));
   }
   run(handler) {
     return new Promise((resolve, reject) => {
