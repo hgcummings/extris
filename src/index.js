@@ -1,7 +1,6 @@
 module.exports = {
     data: {
         engine: require('./data/engine.json'),
-        ground: require('./data/ground.json'),
         input: require('./data/input.json')
     },
     structs: {
