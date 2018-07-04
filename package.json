@@ -1,20 +1,23 @@
 {
-  "name": "intris",
+  "name": "extris",
   "version": "0.1.0",
-  "description": "Yet another Tetris game.",
+  "description": "Tetris as a library. Based on https://github.com/intris/intris",
   "homepage": "http://intris.im/",
   "repository": {
-    "url": "https://github.com/intris/intris.git"
+    "url": "https://github.com/hgcummings/extris.git"
   },
   "bugs": {
-    "url": "https://github.com/intris/intris/issues"
+    "url": "https://github.com/hgcummings/extris/issues"
   },
   "license": "MIT",
-  "author": {
-    "name": "XiaoYan Li",
-    "email": "lxy.lixiaoyan@gmail.com",
-    "url": "https://github.com/lixiaoyan"
-  },
+  "author": "hgcummings",
+  "contributors": [
+    {
+      "name": "XiaoYan Li",
+      "email": "lxy.lixiaoyan@gmail.com",
+      "url": "https://github.com/lixiaoyan"
+    }
+  ],
   "dependencies": {
     "@most/create": "^1.0.1",
     "core-js": "^2.4.0",
